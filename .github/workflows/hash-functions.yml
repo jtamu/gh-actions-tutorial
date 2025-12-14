@@ -1,0 +1,9 @@
+name: Hash Functions
+on: push
+jobs:
+    hash:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "${HASH}"
+              env:
+                HASH: ${{ hashFiles('.github/workflows/*.yml') }}
