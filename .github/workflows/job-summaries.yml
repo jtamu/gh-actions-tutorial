@@ -1,0 +1,9 @@
+name: Job Summaries
+on: push
+jobs:
+    log:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "## Example Title 🚀" >> "${GITHUB_STEP_SUMMARY}"
+            - run: echo "- first line" >> "${GITHUB_STEP_SUMMARY}"
+            - run: echo "- second line" >> "${GITHUB_STEP_SUMMARY}"
