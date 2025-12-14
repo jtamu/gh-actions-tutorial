@@ -1,0 +1,9 @@
+name: Status Check Functions
+on: push
+jobs:
+    on-failure:
+        runs-on: ubuntu-latest
+        steps:
+            - run: exit 1
+            - run: echo "Failed"
+              if: ${{ failure() }}
