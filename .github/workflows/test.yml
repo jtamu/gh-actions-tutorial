@@ -1,13 +1,42 @@
 name: Test
-on:
-    pull_request:
-        paths: ['go/**/*.go']
+on: pull_request
 jobs:
+    check-go-changes:
+        runs-on: ubuntu-latest
+        outputs:
+            go-changed: ${{ steps.filter.outputs.go }}
+        steps:
+            - uses: actions/checkout@v4
+            - uses: dorny/paths-filter@v3
+              id: filter
+              with:
+                  filters: |
+                      go:
+                          - 'go/**/*.go'
     test:
+        needs: check-go-changes
+        if: needs.check-go-changes.outputs.go-changed == 'true'
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-go@v5
               with:
-                go-version: '1.22'
+                  go-version: '1.22'
             - run: go test go/excellent/*.go
+    test-success:
+        runs-on: ubuntu-latest
+        needs: [check-go-changes, test]
+        if: always()
+        steps:
+            - name: Check test result
+              run: |
+                  if [ "${{ needs.check-go-changes.outputs.go-changed }}" == "false" ]; then
+                      echo "No Go files changed, skipping tests"
+                      exit 0
+                  elif [ "${{ needs.test.result }}" == "success" ]; then
+                      echo "Tests passed"
+                      exit 0
+                  else
+                      echo "Tests failed"
+                      exit 1
+                  fi
