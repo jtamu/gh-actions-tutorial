@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Check out theis repo
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
 
       # Start a Slack workflow using a webhook trigger
       # https://github.com/slackapi/slack-github-action
